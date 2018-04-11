@@ -1,9 +1,0 @@
-\begin{thebibliography}{}
-
-\bibitem[Wang et~al., 2016]{wtao-infocom16}
-Wang, T., Liu, F., Guo, J., and Xu, H. (2016).
-\newblock Dynamic sdn controller assignment in data center networks: Stable
-  matching with transfers.
-\newblock In {\em Proc.~IEEE INFOCOM}.
-
-\end{thebibliography}
