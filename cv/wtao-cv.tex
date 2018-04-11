@@ -1,0 +1,200 @@
+\documentclass[10pt,fullpage]{article}
+
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{listliketab}
+\usepackage{array}
+\usepackage{longtable}
+
+\usepackage{natbib}
+\usepackage{CJKutf8}
+\usepackage{bibentry}
+\nobibliography*
+%\bibliographystyle{apa}
+
+% Palatino font
+%\usepackage[T1]{fontenc}
+%\usepackage[sc,osf]{mathpazo}
+
+\def\name{Tao Wang}
+
+\reversemarginpar
+
+\geometry{
+  body={6.5in, 8.5in},
+  left=1.0in,
+  top=1.0in
+}
+
+% Customize page headers
+\pagestyle{myheadings}
+\markright{\name}
+\thispagestyle{empty}
+
+% Custom section fonts
+\usepackage{sectsty}
+%\sectionfont{\rmfamily\mdseries\Large}
+%\sectionfont{}
+%\subsectionfont{\rmfamily\mdseries\itshape\large}
+\subsectionfont{\small}
+
+% Other possible font commands include:
+% \ttfamily for teletype,
+% \sffamily for sans serif,
+% \bfseries for bold,
+% \scshape for small caps,
+% \normalsize, \large, \Large, \LARGE sizes.
+
+% Don't indent paragraphs.
+\setlength\parindent{0em}
+
+% Make lists without bullets
+%\renewenvironment{itemize}{
+%  \begin{list}{}{
+%    \setlength{\leftmargin}{1.5em}
+%  }
+%}{
+%  \end{list}
+%}
+
+\begin{document}
+\bibliographystyle{abbrv}
+
+% Print name centered and bold:
+\centerline{\Large \bf \name}
+% \vspace{0.25in}
+% \rule{\textwidth}{0.4pt}
+\section*{Contact Information}
+
+%\begin{minipage}{0.50\linewidth}
+%  School of Computer Science and Technology \\
+%  Huazhong University of Science and Technology \\
+%  Room 225, No. 5 East Building, No. 1037, Rd. Luoyu \\
+%  Hongshan district, Wuhan, Hubei Province, 430074
+%\end{minipage}
+\begin{minipage}{0.50\linewidth}
+	\begin{CJK*}{UTF8}{gbsn}
+	\begin{tabular}{ll}
+		Phone: & (+86)138-7104-1016 \\
+		Email: & tao.wang0221[at]gmail.com \\
+		Homepage: & \url{wtao0221.github.io} \\
+		Address: &  Room 9, Floor 6, Yinhe Building, No. 49 Rd. DaXing, Jianghan District, Wuhan, Hubei, 430074 \\
+		中文地址: &  湖北省武汉市江汉区大兴路49号（银河大厦）6楼9号, 430074\\
+	\end{tabular}
+	\end{CJK*}
+\end{minipage}
+
+\section*{Education}
+
+\begin{tabular}{ll}
+	2014 --- 2017 & {\bf M.Eng.} in Computer System and Architecture \\
+	& Service Computing Technology and System Lab \\
+	& School of Computer Science and Technology \\
+	& Huazhong University of Science and Technology \\
+	& Supervised by Prof. Fangming Liu \\
+	2010 --- 2014 & {\bf B.Eng.} in Computer Science and Technology \\
+	& Honored ACM Class, School of Computer Science and Technology \\
+	& Huazhong University of Science and Technology \\
+\end{tabular}
+
+%\section*{Research Interests}
+%\begin{itemize}
+%	\item Data Center Networking
+%\end{itemize}
+
+\section*{Working Experience}
+
+\begin{tabular}{ll}
+	2017.11 & {\bf Software Engineer} at Douyu Network Technology Co., Ltd.  \\
+	--- present & ~~~~Maintain RPC framework, Danmu Scheduler, etc. \\
+\end{tabular}
+
+\section*{Publications}
+
+%\setlength{\extrarowheight}{10pt}
+\subsection*{Conference and Workshop Publications:}
+\begin{longtable}{p{0.5in}|p{5.5in}}
+	2017 & \textbf{Tao Wang}, Hong Xu, Fangming Liu, ``Aemon: Information-agnostic Mix-flow Scheduling in Data Center Networks'' in Proc. of ACM APNet 2017. \\
+	& \\
+	& Jian Guo, Fangming Liu, \textbf{Tao Wang}, John C.S. Lui, ``Pricing Intra-Datacenter Networks with Over-Committed Bandwidth Guarantee'' in Proc. of USENIX ATC 2017. \\
+	& \\
+	& \textbf{Tao Wang}, Hong Xu, Fangming Liu, ``Multi-Resource Load Balancing for Virtual Network Functions'' in Proc. of IEEE ICDCS 2017. \\
+	& \\
+	& Qixia Zhang, Yikai Xiao, Fangming Liu, John C.S. Lui, Jian Guo, \textbf{Tao Wang}, ``Joint Optimization of Chain Placement and Request Scheduling for Network Function Virtualization'' in Proc. of IEEE ICDCS 2017. \\
+	& \\
+	2016 & Zhifeng Xu, Fangming Liu, \textbf{Tao Wang}, Hong Xu, ``Demystifying the Energy Efficiency of Network Function Virtualization'' (Best paper candidate) in Proc. of IEEE/ACM IWQoS 2016. \\
+	& \\
+	& \textbf{Tao Wang}, Fangming Liu, Jian Guo and Hong Xu, ``Dynamic SDN Controller Assignment in Data Center Networks: Stable Matching with Transfers'' in Proc.~of IEEE INFOCOM 2016. \\
+\end{longtable}
+
+\subsection*{Journal Publications:}
+\begin{longtable}{p{0.5in}|p{5.5in}}
+	2017 & \textbf{Tao Wang}, Fangming Liu, Hong Xu, ``An Efficient Online Algorithm for Dynamic SDN Controller Assignment in Data Center Networks'' in IEEE/ACM Transactions on Networking.
+\end{longtable}
+
+%\section*{Talks}
+%\begin{itemize}
+%	\item Demystifying the Energy Efficiency of Network Function Virtualization, Beijing, China, June, 2016
+%	\item Dynamic SDN Controller Assignment in Data Center Networks: Stable Matching with Transfers, San Francisco, CA, USA, April, 2016
+%\end{itemize}
+	
+
+\section*{Honors and Awards}
+\begin{itemize}
+	\item Excellent Graduate, Huazhong University of Science and Technology (2017)
+	\item National Scholarship (2016)
+	\item Excellent Graduate, Huazhong University of Science and Technology (2014)
+\end{itemize}
+
+\section*{Skills}
+\begin{itemize}
+	\item \textbf{Programming}: C/C++, Go, Python
+	\item \textbf{Miscellaneous}: Linux Kernel Programming, NS3/NS2 Simulator
+\end{itemize}
+
+%\section*{Professional Activities}
+%\begin{itemize}
+%	\item \textbf{Paper review for journals:} \\
+%	~~IEEE Transactions on Parallel and Distributed Systems
+%	\item \textbf{Paper review for conferences:} \\
+%	~~IEEE INFOCOM 2015---2016
+%\end{itemize}
+
+%\section*{References}
+%
+%\begin{minipage}{0.5\linewidth}
+%	\textbf{Prof. Fangming Liu} \\
+%	Professor \\
+%	School of Computer Science and Technology \\
+%	Huazhong University of Science and Tehcnology \\
+%	fmliu[at]hust[dot]edu[dot]cn
+%\end{minipage}
+%\begin{minipage}{0.5\linewidth}
+%	\textbf{Prof. Hai Jin} \\
+%	Professor \\
+%	School of Computer Science and Technology \\
+%	Huazhong University of Science and Tehcnology \\
+%	hjin[at]hust[dot]edu[dot]cn
+%\end{minipage}
+%
+%\vspace{10pt}
+%
+%\begin{minipage}{0.5\linewidth}
+%	\textbf{Prof. Hong Xu} \\
+%	Assistant Professor \\
+%	Department of Computer Science \\
+%	City University of Hong Kong \\
+%	henry[dot]xu[at]cityu[dot]edu[dot]hk
+%\end{minipage}
+
+% \setlength{\extrarowheight}{5pt}s
+
+% Footer
+% \bigskip
+% \begin{center}
+%  \begin{footnotesize}
+%    Last updated: \today
+%  \end{footnotesize}
+% \end{center}
+
+\end{document}
