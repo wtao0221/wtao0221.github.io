@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/safari-pinned-tab.svg?v=5.1.4" color="#222">
+
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml" />
+
+
+
+  <meta name="keywords" content="KVM,VF,mTCP," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Here is a post about How to run mTCP applications in VM with Virtual Function. 1. Environment1.1 about nodesAt CloudLab, we launch two c220g2 nodes, where X520 10Gb NIC supports SR-IOV, at Wisc site.">
+<meta name="keywords" content="KVM,VF,mTCP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="KVM+Virtual Function Configuration on CloudLab">
+<meta property="og:url" content="https://wtao0221.github.io/2018/04/27/KVM-Virtual-Function-Configuration-on-CloudLab/index.html">
+<meta property="og:site_name" content="Tao Wang">
+<meta property="og:description" content="Here is a post about How to run mTCP applications in VM with Virtual Function. 1. Environment1.1 about nodesAt CloudLab, we launch two c220g2 nodes, where X520 10Gb NIC supports SR-IOV, at Wisc site.">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-04-27T14:30:30.928Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="KVM+Virtual Function Configuration on CloudLab">
+<meta name="twitter:description" content="Here is a post about How to run mTCP applications in VM with Virtual Function. 1. Environment1.1 about nodesAt CloudLab, we launch two c220g2 nodes, where X520 10Gb NIC supports SR-IOV, at Wisc site.">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://wtao0221.github.io/2018/04/27/KVM-Virtual-Function-Configuration-on-CloudLab/"/>
+
+
+
+
+
+  <title>KVM+Virtual Function Configuration on CloudLab | Tao Wang</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Tao Wang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-publications">
+          <a href="/publication/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-leanpub"></i> <br />
+            
+            Publications
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://wtao0221.github.io/2018/04/27/KVM-Virtual-Function-Configuration-on-CloudLab/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tao Wang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/wtao.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tao Wang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">KVM+Virtual Function Configuration on CloudLab</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-04-27T12:07:35+08:00">
+                2018-04-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/tech/" itemprop="url" rel="index">
+                    <span itemprop="name">tech</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Here is a post about <strong>How to run <a href="https://github.com/eunyoung14/mtcp" title="mTCP site" target="_blank" rel="noopener">mTCP</a> applications in VM with Virtual Function</strong>.</p>
+<h3 id="1-Environment"><a href="#1-Environment" class="headerlink" title="1. Environment"></a>1. Environment</h3><h4 id="1-1-about-nodes"><a href="#1-1-about-nodes" class="headerlink" title="1.1 about nodes"></a>1.1 about nodes</h4><p>At <a href="https://cloudlab.us/" title="CloudLab site" target="_blank" rel="noopener">CloudLab</a>, we launch two c220g2 nodes, where X520 10Gb NIC supports SR-IOV, at Wisc site. We choose Ubuntu 16.04 64bit STD image.</p>
+<p>To enable the SR-IOV support, you may edit <code>/etc/default//grub</code> to add <code>intel_iommu=on</code> in <code>GRUB_CMDLINE_LINUX</code> Then <code>sudo update-grub</code> and reboot the system.</p>
+<p>To configure VF for each NIC, you may just reload the NIC driver with addtional parameters. (NOTE: pay attention to your driver, it may be ixgbe, i40e or something else.)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo rmmod ixgbe</span><br><span class="line">sudo modprobe ixgbe max_vfs=2</span><br></pre></td></tr></table></figure>
+<p>To see whether your configuration is done correctly, just run <code>sudo lspci | grep -i ether</code> to see whether there are pci devices with Virtual Functions.</p>
+<h4 id="1-2-about-KVM"><a href="#1-2-about-KVM" class="headerlink" title="1.2 about KVM"></a>1.2 about KVM</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### install some dependencies</span></span><br><span class="line">sudo apt-get install -y qemu-kvm libvirt-bin ubuntu-vm-builder bridge-utils virt-manager libosinfo-bin libguestfs-tools virt-top</span><br><span class="line"></span><br><span class="line"><span class="comment">### add your current user to group libvirtd</span></span><br><span class="line">sudo adduser `id -un` libvirtd</span><br></pre></td></tr></table></figure>
+<h3 id="2-Test"><a href="#2-Test" class="headerlink" title="2. Test"></a>2. Test</h3><h4 id="2-1-Launch-a-VM"><a href="#2-1-Launch-a-VM" class="headerlink" title="2.1 Launch a VM"></a>2.1 Launch a VM</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### create a disk </span></span><br><span class="line">qemu-img create -f qcow2 ubuntu.qcow2 20G</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### launch a VM named test here</span></span><br><span class="line">sudo virt-install \</span><br><span class="line">--name <span class="built_in">test</span> \</span><br><span class="line">--connect qemu:///system \</span><br><span class="line">--ram 10240 \</span><br><span class="line">--disk path=/path-to-disk/ubuntu.qcow2,format=qcow2,bus=virtio,size=8 \</span><br><span class="line">--vcpus 8 \</span><br><span class="line">--os-type linux \</span><br><span class="line">--network network=default \</span><br><span class="line">--graphics none \</span><br><span class="line">--console pty,target_type=serial \</span><br><span class="line">--location=/path-to-img/ubuntu-14.04.5-server-amd64.iso \</span><br><span class="line">--extra-args <span class="string">'console=ttyS0,115200n8 serial’</span></span><br></pre></td></tr></table></figure>
+<p>Here, we define a domain named <code>test</code> with 8 vCPUs and 10GB memory. We add a default network interface just for SSH connection. </p>
+<h4 id="2-2-insert-a-pci-passthrough-device"><a href="#2-2-insert-a-pci-passthrough-device" class="headerlink" title="2.2 insert a pci-passthrough device"></a>2.2 insert a pci-passthrough device</h4><p>To inject a pci-passthrough device, namely VF in this setting, we only need to know the pci address at our host and modify the VM configuration xml file.</p>
+<p>To check VFs’ pci addresses, just run <code>ip link show</code> or <code>lshw -c network -businfo</code>. And add this info to <code>sudo virsh edit test</code>.</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="tag">&lt;<span class="name">interface</span> <span class="attr">type</span>=<span class="string">'hostdev'</span> <span class="attr">managed</span>=<span class="string">'yes'</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">mac</span> <span class="attr">address</span>=<span class="string">'52:54:00:b1:fa:4f'</span>/&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">source</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">address</span> <span class="attr">type</span>=<span class="string">'pci'</span> <span class="attr">domain</span>=<span class="string">'0x0000'</span> <span class="attr">bus</span>=<span class="string">'0x06'</span> <span class="attr">slot</span>=<span class="string">'0x10'</span> <span class="attr">function</span>=<span class="string">'0x0'</span>/&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">source</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">interface</span>&gt;</span></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>When you reluanch your VM, you may use <code>ifconfig -a</code> to check whether you have done correctly.</p>
+<h4 id="2-3-small-modifications-to-mTCP"><a href="#2-3-small-modifications-to-mTCP" class="headerlink" title="2.3 small modifications to mTCP"></a>2.3 small modifications to mTCP</h4><p>File <code>/mtcp/src/dpdk_module.c</code>, comment lines related to set TX/RX flow control of the NIC.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* retrieve current flow control settings per port */</span></span><br><span class="line"><span class="built_in">memset</span>(&amp;fc_conf, <span class="number">0</span>, <span class="keyword">sizeof</span>(fc_conf));</span><br><span class="line">ret = rte_eth_dev_flow_ctrl_get(portid, &amp;fc_conf);</span><br><span class="line"><span class="keyword">if</span> (ret != <span class="number">0</span>)</span><br><span class="line">	rte_exit(EXIT_FAILURE, <span class="string">"Failed to get flow control info!\n"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">/* and just disable the rx/tx flow control */</span></span><br><span class="line">fc_conf.mode = RTE_FC_NONE;</span><br><span class="line">ret = rte_eth_dev_flow_ctrl_set(portid, &amp;fc_conf);</span><br><span class="line"><span class="keyword">if</span> (ret != <span class="number">0</span>)</span><br><span class="line">	rte_exit(EXIT_FAILURE, <span class="string">"Failed to set flow control info!: errno: %d\n"</span>, ret);</span><br></pre></td></tr></table></figure>
+<p>And if you rename VF nic name or set IP to it, the MAC may be all-zero. So just modify <code>dpdk-17.08/lib/librte_eal/linuxapp/igb_uio/igb_uio.h</code> to enable <code>ifconfig $if_name hw ether $mac_addr</code>.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">int</span></span><br><span class="line">netdev_set_mac(struct net_device *netdev, <span class="keyword">void</span> *p)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">sockaddr</span> *<span class="title">addr</span> = <span class="title">p</span>;</span></span><br><span class="line">	<span class="keyword">if</span> (!is_valid_ether_addr((<span class="keyword">unsigned</span> <span class="keyword">char</span> *)(addr-&gt;sa_data)))</span><br><span class="line">		<span class="keyword">return</span> -EADDRNOTAVAIL;</span><br><span class="line">	<span class="built_in">memcpy</span>(netdev-&gt;dev_addr, addr-&gt;sa_data, netdev-&gt;addr_len);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line">...</span><br><span class="line">	.ndo_set_mac_address    = netdev_set_mac,</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<h3 id="Miscellaneous"><a href="#Miscellaneous" class="headerlink" title="Miscellaneous"></a>Miscellaneous</h3><p>If you use an image like Ubuntu 16.04 64-bit as the guest OS, you may lost your console when you boot your VM. This is because that <code>grub</code> file may not add the required setting by default. To solve this problem, just modify the <code>grub</code> and <code>bootentry</code> and then reboot.</p>
+<p>Specifically,</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo guestmount -d <span class="built_in">test</span> -i /mnt</span><br><span class="line">sudo vim /mnt/etc/default/grub</span><br></pre></td></tr></table></figure>
+<p>modify related fields (NOTE: you can set your own baud rate):</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">GRUB_CMDLINE_LINUX=<span class="string">'console=tty0 console=ttyS0,115200n8'</span></span><br><span class="line">GRUB_TERMINAL=serial</span><br><span class="line">GRUB_SERIAL_COMMAND=<span class="string">"serial --speed=115200 --unit=0 --word=8 --parity=no --stop=1”</span></span><br></pre></td></tr></table></figure>
+<p>and update the boot entry:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /mnt/boot/grub/grub.cfg</span><br><span class="line"><span class="comment">### add additional parameters</span></span><br><span class="line">console=ttyS0,19200 earlyprint=serial,ttyS0,19200</span><br></pre></td></tr></table></figure>
+<h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><p><a href="https://wiki.libvirt.org/page/Networking#PCI_Passthrough_of_host_network_devices" target="_blank" rel="noopener">about how to add a pci passthrough host network device</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/KVM/" rel="tag"># KVM</a>
+          
+            <a href="/tags/VF/" rel="tag"># VF</a>
+          
+            <a href="/tags/mTCP/" rel="tag"># mTCP</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/wtao.jpg"
+                alt="Tao Wang" />
+            
+              <p class="site-author-name" itemprop="name">Tao Wang</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Favorite Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://en.wikipedia.com/" title="Wiki" target="_blank">Wiki</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tao Wang</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
