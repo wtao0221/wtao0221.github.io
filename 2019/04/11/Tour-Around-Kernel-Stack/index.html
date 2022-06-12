@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/dc-favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/dc-favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/dc-favicon-16x16.png">
+  <link rel="mask-icon" href="/images/dc-favicon-32x32.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/purple/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wtao0221.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.12.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+
+
+<link rel="canonical" href="https://wtao0221.github.io/2019/04/11/Tour-Around-Kernel-Stack/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://wtao0221.github.io/2019/04/11/Tour-Around-Kernel-Stack/","path":"2019/04/11/Tour-Around-Kernel-Stack/","title":"Tour Around Kernel Stack"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Tour Around Kernel Stack | Tao Wang</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Tao Wang</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-publications"><a href="/publications/" rel="section"><i class="fa fa-book fa-fw"></i>Publications</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#walking-path"><span class="nav-number">1.</span> <span class="nav-text">Walking Path</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#sending-path"><span class="nav-number">1.1.</span> <span class="nav-text">Sending Path</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#receiving-path"><span class="nav-number">1.2.</span> <span class="nav-text">Receiving Path</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#from-driver-view"><span class="nav-number">1.3.</span> <span class="nav-text">From Driver View</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#veth-driver-driversnetveth.c"><span class="nav-number">1.3.1.</span> <span class="nav-text">veth driver [drivers&#x2F;net&#x2F;veth.c]</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#transmit-path"><span class="nav-number">1.3.2.</span> <span class="nav-text">Transmit Path</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#bridge-kernel-module"><span class="nav-number">1.3.3.</span> <span class="nav-text">bridge kernel module</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#misc"><span class="nav-number">2.</span> <span class="nav-text">Misc</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#references"><span class="nav-number">3.</span> <span class="nav-text">References</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Tao Wang"
+      src="/images/wtao.jpg">
+  <p class="site-author-name" itemprop="name">Tao Wang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <!--
+        -->
+        <a href="https://github.com/wtao0221" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wtao0221" rel="noopener" target="_blank"><i class="fa custom cus-github "></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <!--
+        -->
+        <a href="https://scholar.google.com/citations?user=TG8xPeYAAAAJ&hl=en" title="Google → https:&#x2F;&#x2F;scholar.google.com&#x2F;citations?user&#x3D;TG8xPeYAAAAJ&amp;hl&#x3D;en" rel="noopener" target="_blank"><i class="fa custom cus-google "></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <!--
+        -->
+        <a href="https://www.linkedin.com/in/tao-w-407b26203/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;tao-w-407b26203&#x2F;" rel="noopener" target="_blank"><i class="fa custom cus-linkedin "></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <!--
+        -->
+        <a href="https://instagram.com/wowteezy" title="Instagram → https:&#x2F;&#x2F;instagram.com&#x2F;wowteezy" rel="noopener" target="_blank"><i class="fa custom cus-instagram "></i></a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+
+      <script type="text/javascript" id="clstr_globe" src="//clustrmaps.com/globe.js?d=XEzRCi2wr_sNlXr2_LYb5j68at7P__0CHgu1zzTpL0o"></script>
+
+
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://wtao0221.github.io/2019/04/11/Tour-Around-Kernel-Stack/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/wtao.jpg">
+      <meta itemprop="name" content="Tao Wang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tao Wang">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Tour Around Kernel Stack | Tao Wang">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Tour Around Kernel Stack
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2019-04-11 13:39:34" itemprop="dateCreated datePublished" datetime="2019-04-11T13:39:34-04:00">2019-04-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/tech/" itemprop="url" rel="index"><span itemprop="name">tech</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/2019/04/11/Tour-Around-Kernel-Stack/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/04/11/Tour-Around-Kernel-Stack/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>In this blog post, I will share my shallow understanding of Linux Kernel Networking Stack by touring a simple network topology which consists of two containers connected to a linux <code>bridge</code> using <code>veth</code> as shown below.</p>
+<div data-align="center">
+<p><img src="../../../../sketches/tour_kernel.jpg" width=50%/></p>
+</div>
+<p>Our discussion here is mainly based on the linux kernel <a target="_blank" rel="noopener" href="https://mirrors.edge.kernel.org/pub/linux/kernel/v4.x/linux-4.14.4.tar.gz">4.14.4</a> source code and we will talk about both the sending and receiving path beginning with the <code>write()</code> and <code>read()</code> systemcall. Also, we will discuss some details of the <code>veth</code> and <code>bridge</code> drivers.</p>
+<p>Note that kernel is a fairly complex, and the networking subsystem also interacts with other subsystems (e.g., <code>softirq</code> subsystem, and etc.). So here, we do not delve into those details and neither the details of specific data structs. We focus more on the path.</p>
+<h3 id="walking-path">Walking Path</h3>
+<p>Usually, userspace applications use systemcall (e.g., <code>write()</code>, <code>read()</code>, and etc.) to interact with the kernel stack. We talk about the sending path first.</p>
+<h4 id="sending-path">Sending Path</h4>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">write() // [fs/read_write.c]</span><br><span class="line">	|-&gt; vfs_write() new_sync_write() call_write_iter() // [fs/read_write.c]</span><br><span class="line">		|-&gt; sock_write_iter() // [net/socket.c] </span><br><span class="line">			|-&gt; sock_sendmsg() </span><br><span class="line">				|-&gt; inet_sendmsg() // [net/ipv4/af_inet.c] </span><br><span class="line">					|-&gt; tcp_sendmsg() // [net/ipv4/tcp.c] **!!!data copy here!!!** tcp_sendmsg_locked() skb_add_data_nocache()</span><br><span class="line">						|-&gt; tcp_push() __tcp_push_pending_frames() tcp_write_xmit() // [net/ipv4/tcp_output.c]</span><br><span class="line">							|-&gt; tcp_transmit_skb() // build tcp header here </span><br><span class="line">								|-&gt; ip_queue_xmit() // build ip header here [net/ipv4/ip\_output.c] ip_local_out() ip_output() ip_finish_output() ip_finish_output2() // IP fragmentation</span><br><span class="line">									|-&gt; neigh_output() neigh_hh_output() [net/neighbour.h] dev_queue_xmit() [net/core/dev.c] __dev_queue_xmit() </span><br></pre></td></tr></table></figure>
+<ol type="1">
+<li>select transmitting hardware queue, if supported</li>
+<li>if no queue (loopback, tunnel, etc.), dev_hard_start_xmit()</li>
+<li>otherwise, entering some queuing discipline</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">|-&gt; xmit_one() dev_queue_xmit_nit() // NOTE: skb_clone() for trace</span><br><span class="line">|-&gt; netdev_start_xmit() </span><br><span class="line">	|-&gt; ndo_start_xmit()</span><br></pre></td></tr></table></figure>
+<h4 id="receiving-path">Receiving Path</h4>
+<p>Though receiving path seems to be an exact reverse path of sending path, there exists some differences. In my view, the receiving path is much more '<em>asynchronous</em>', since the procedures of calling <code>read()</code> systemcall and kernel receiving data from underlying NIC are not much related.</p>
+<p>We start by discussing <code>read()</code> and then talk about how kernel receives data frames.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">read() [fs/read_write.c] </span><br><span class="line">	|-&gt; vfs\_read() new_sync_read() call_read_iter() // [fs/read_write.c]</span><br><span class="line">		|-&gt; sock_read_iter() // [net/socket.c] </span><br><span class="line">			|-&gt; sock_recvmsg() </span><br><span class="line">				|-&gt; tcp_recvmsg() // [net/ipv4/tcp.c] [NOTE: 1. sk_wait_data() 2. skb_copy_datagram_iovec() from kernel to userspace]</span><br></pre></td></tr></table></figure>
+<ol type="1">
+<li>data DMAed to pre-defined memory region</li>
+<li>raise IRQ</li>
+<li>typically, hardware IRQ handler will trigger a NAPI softirq</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">|-&gt; net_rx_action() </span><br><span class="line">|-&gt; napi_poll() </span><br><span class="line">	|-&gt; [NOTE: device-specific implementation]</span><br><span class="line">	|-&gt; napi_gro_receive() [net/core/dev.c] </span><br><span class="line">	|-&gt; dev_gro_receivei() </span><br><span class="line">	|-&gt; napi_gro_complete() </span><br><span class="line">	|-&gt; netif_receive_skb_internal() [NOTE: XDP and RPS things are done here]</span><br></pre></td></tr></table></figure>
+<ol type="1">
+<li>due to some traffic control on the receiving side, <code>process_backlog()</code> here</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">|-&gt; __netif_receive_skb() </span><br><span class="line">	|-&gt; deliver_skb() [NOTE: calls pre-defined func] </span><br><span class="line">		|-&gt; ip_rcv() [NOTE: pass through netfilter] [net/ipv4/ip\_input.c] </span><br><span class="line">			|-&gt; ip_rcv_finish() dst_entry() [NOTE: calls pre-defined ip_local_deliver()]</span><br><span class="line">				|-&gt; ip_local_deliver_finish()</span><br></pre></td></tr></table></figure>
+<p><strong>OPTION-1</strong> [stack, calls pre-defined <code>tcp_v4_rcv()</code>]</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">|-&gt; tcp_v4_do_rcv() [net/ipv4/tcp\_ipv4.c] [NOTE: there are some parts related to the ACK (transmit path)] </span><br><span class="line">	|-&gt; tcp_rcv_established() [NOTE: main TCP stack-related operations] </span><br><span class="line">		|-&gt; tcp\_data\_queue() [NOTE: handle OOO queue and data queue, calls pre-defined sock_def_readable()]</span><br></pre></td></tr></table></figure>
+<p><strong>OPTION-2</strong> [raw]</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">|-&gt; raw_local_deliver() </span><br><span class="line">|-&gt; raw_v4_input() </span><br><span class="line">|-&gt; raw_rcv() </span><br><span class="line">|-&gt; raw_rcv_skb() </span><br><span class="line">	|-&gt; sock_queue_rcv_skb() [NOTE: skb_clone() happens here]</span><br></pre></td></tr></table></figure>
+<h4 id="from-driver-view">From Driver View</h4>
+<p>Easy to use <code>ethtool -i</code> to see that the type of exact driver of both vNIC inside container and in the host</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">**inside container**</span><br><span class="line">root@c0026747a805:/# ethtool -i eth0</span><br><span class="line">driver: veth</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">**in host**</span><br><span class="line">~$ ethtool -i veth0c5cf6a</span><br><span class="line">driver: veth</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<h5 id="veth-driver-driversnetveth.c">veth driver [drivers/net/veth.c]</h5>
+<p>veth devices are a pair of interconnected virtual Ethernet devices. <code>veth_newlink()</code> function creates a pair of devices.</p>
+<h5 id="transmit-path">Transmit Path</h5>
+<p>Remember that along the trasmit path, the final stage is to call <code>ndo_start_xmit()</code>, which is driver-specific.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">static const struct net_device_ops veth_netdev_ops = &#123;</span><br><span class="line">...</span><br><span class="line">	.ndo_start_xmit = veth_xmit,</span><br><span class="line">...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>We here take a close look on <code>veth_xmit()</code>.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">static netdev_tx_t veth_xmit(struct sk_buff *skb, struct net_device *dev) &#123;</span><br><span class="line">...</span><br><span class="line">	rcv = rcu_dereference(priv-&gt;peer); // get the peer net device</span><br><span class="line">	...</span><br><span class="line">	if (likely(dev_forward_skb(rcv, skb) == NET_RX_SUCCESS)) &#123;</span><br><span class="line">		...</span><br><span class="line">	&#125;</span><br><span class="line">...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">dev_forward_skb()</span><br><span class="line">	|-&gt; __dev_forward_skb() // checks whether skb is forwardable</span><br><span class="line">	|-&gt; netif_rx_internal()</span><br><span class="line">		|-&gt; enqueue_to_backlog() // enqueue skb to per-cpu list, which is a softnet_data structure</span><br><span class="line">			|-&gt; ____napi_schedule() // raise soft IRQ</span><br></pre></td></tr></table></figure>
+<p>[NOTE: this soft IRQ is processed by the pre-registered <code>process_backlog()</code> in <code>net_dev_init()</code>.]</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">process_backlog()</span><br><span class="line">	|-&gt; __netif_receive_skb()</span><br><span class="line">		|-&gt; __netif_receive_skb_core()</span><br><span class="line">			|-&gt; deliver_skb() // if stack-related, deliver to the upper stack, e.g. ip_rcv()</span><br><span class="line">			|-&gt; rx_handler() // calls the device&#x27;s pre-registered rx_handler which is br_handle_frame </span><br></pre></td></tr></table></figure>
+<p>We explain the related bridge kernel module in the next section.</p>
+<h5 id="bridge-kernel-module">bridge kernel module</h5>
+<p>Remember that one side of a veth pair is attached to the bridge using <code>brctl addif</code> commmand which calls <code>br_add_if()</code>.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">int br_add_if(struct net_bridge *br, struct net_device *dev) &#123;</span><br><span class="line">...</span><br><span class="line">	err = netdev_rx_handler_register(dev, br_handle_frame, p);</span><br><span class="line">...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">br_handle_frame() </span><br><span class="line">	|-&gt; br_handle_frame_finish()</span><br><span class="line">		|-&gt; br_forward()</span><br><span class="line">			|-&gt; __br_forward()</span><br><span class="line">				|-&gt; br_forward_finish()</span><br><span class="line">					|-&gt; br_dev_queue_push_xmit()</span><br><span class="line">						|-&gt; dev_queue_xmit()</span><br></pre></td></tr></table></figure>
+<p>As we can see, when handling the incoming frames, the bridge will finally call <code>ndo_start_xmit()</code>, a device-specific driver procedure, here, it is <code>veth_xmit()</code> as we have discussed.</p>
+<p>[NOTE: here, when we talk about <code>br_handle_frame()</code>, we focus on the forward case. Actually, it does some frame-specific things (e.g., IEEE pause frame, STP, and etc.)]</p>
+<h3 id="misc">Misc</h3>
+<ul>
+<li>use <code>grep -nr "SYSCALL_DEFINE</code> to locate system calls (e.g., <code>write()</code>)</li>
+</ul>
+<h3 id="references">References</h3>
+<ol type="1">
+<li>Monitoring and Tuning the Linux Networking Stack: <a target="_blank" rel="noopener" href="https://blog.packagecloud.io/eng/2017/02/06/monitoring-tuning-linux-networking-stack-sending-data/#">Sending Data</a> and <a target="_blank" rel="noopener" href="https://blog.packagecloud.io/eng/2016/06/22/monitoring-tuning-linux-networking-stack-receiving-data/">Receiving Data</a></li>
+<li><a target="_blank" rel="noopener" href="http://shop.oreilly.com/product/9780596002558.do">Understanding Linux Network Internals</a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/kernel/" rel="tag"><i class="fa fa-tag"></i> kernel</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/04/27/KVM-Virtual-Function-Configuration-on-CloudLab/" rel="prev" title="KVM+Virtual Function Configuration on CloudLab">
+                  <i class="fa fa-chevron-left"></i> KVM+Virtual Function Configuration on CloudLab
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa-solid fa-code"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tao Wang</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div><script color="0,0,0" opacity="0.5" zIndex="-1" count="230" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  <script src="/js/third-party/pace.js"></script>
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.1/es5/tex-mml-chtml.js","integrity":"sha256-hlC2uSQYTmPsrzGZTEQEg9PZ1a/+SV6VBCTclohf2og="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"wtaos-homepage","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>

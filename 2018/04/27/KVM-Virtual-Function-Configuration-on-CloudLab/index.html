@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/dc-favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/dc-favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/dc-favicon-16x16.png">
+  <link rel="mask-icon" href="/images/dc-favicon-32x32.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/purple/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wtao0221.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.12.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+
+
+<link rel="canonical" href="https://wtao0221.github.io/2018/04/27/KVM-Virtual-Function-Configuration-on-CloudLab/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://wtao0221.github.io/2018/04/27/KVM-Virtual-Function-Configuration-on-CloudLab/","path":"2018/04/27/KVM-Virtual-Function-Configuration-on-CloudLab/","title":"KVM+Virtual Function Configuration on CloudLab"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>KVM+Virtual Function Configuration on CloudLab | Tao Wang</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Tao Wang</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-publications"><a href="/publications/" rel="section"><i class="fa fa-book fa-fw"></i>Publications</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#environment"><span class="nav-number">1.</span> <span class="nav-text">1. Environment</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#about-nodes"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 about nodes</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#about-kvm"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 about KVM</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#test"><span class="nav-number">2.</span> <span class="nav-text">2. Test</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#launch-a-vm"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 Launch a VM</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#insert-a-pci-passthrough-device"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 insert a pci-passthrough device</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#small-modifications-to-mtcp"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 small modifications to mTCP</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#miscellaneous"><span class="nav-number">3.</span> <span class="nav-text">Miscellaneous</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#references"><span class="nav-number">4.</span> <span class="nav-text">References</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Tao Wang"
+      src="/images/wtao.jpg">
+  <p class="site-author-name" itemprop="name">Tao Wang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <!--
+        -->
+        <a href="https://github.com/wtao0221" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wtao0221" rel="noopener" target="_blank"><i class="fa custom cus-github "></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <!--
+        -->
+        <a href="https://scholar.google.com/citations?user=TG8xPeYAAAAJ&hl=en" title="Google → https:&#x2F;&#x2F;scholar.google.com&#x2F;citations?user&#x3D;TG8xPeYAAAAJ&amp;hl&#x3D;en" rel="noopener" target="_blank"><i class="fa custom cus-google "></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <!--
+        -->
+        <a href="https://www.linkedin.com/in/tao-w-407b26203/" title="LinkedIn → https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;tao-w-407b26203&#x2F;" rel="noopener" target="_blank"><i class="fa custom cus-linkedin "></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <!--
+        -->
+        <a href="https://instagram.com/wowteezy" title="Instagram → https:&#x2F;&#x2F;instagram.com&#x2F;wowteezy" rel="noopener" target="_blank"><i class="fa custom cus-instagram "></i></a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+
+      <script type="text/javascript" id="clstr_globe" src="//clustrmaps.com/globe.js?d=XEzRCi2wr_sNlXr2_LYb5j68at7P__0CHgu1zzTpL0o"></script>
+
+
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://wtao0221.github.io/2018/04/27/KVM-Virtual-Function-Configuration-on-CloudLab/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/wtao.jpg">
+      <meta itemprop="name" content="Tao Wang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tao Wang">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="KVM+Virtual Function Configuration on CloudLab | Tao Wang">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          KVM+Virtual Function Configuration on CloudLab
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2018-04-27 12:07:35" itemprop="dateCreated datePublished" datetime="2018-04-27T12:07:35-04:00">2018-04-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/tech/" itemprop="url" rel="index"><span itemprop="name">tech</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/2018/04/27/KVM-Virtual-Function-Configuration-on-CloudLab/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/04/27/KVM-Virtual-Function-Configuration-on-CloudLab/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>Here is a post about <strong>How to run <a target="_blank" rel="noopener" href="https://github.com/eunyoung14/mtcp">mTCP</a> applications in VM with Virtual Function</strong>.</p>
+<h3 id="environment">1. Environment</h3>
+<h4 id="about-nodes">1.1 about nodes</h4>
+<p>At <a target="_blank" rel="noopener" href="https://cloudlab.us">CloudLab</a>, we launch two c220g2 nodes, where X520 10Gb NIC supports SR-IOV, at Wisc site. We choose Ubuntu 16.04 64bit STD image.</p>
+<p>To enable the SR-IOV support, you may edit <code>/etc/default//grub</code> to add <code>intel_iommu=on</code> in <code>GRUB_CMDLINE_LINUX</code> Then <code>sudo update-grub</code> and reboot the system.</p>
+<p>To configure VF for each NIC, you may just reload the NIC driver with addtional parameters. (NOTE: pay attention to your driver, it may be ixgbe, i40e or something else.)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo rmmod ixgbe</span><br><span class="line">sudo modprobe ixgbe max_vfs=2</span><br></pre></td></tr></table></figure>
+<p>To see whether your configuration is done correctly, just run <code>sudo lspci | grep -i ether</code> to see whether there are pci devices with Virtual Functions.</p>
+<h4 id="about-kvm">1.2 about KVM</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### install some dependencies</span></span><br><span class="line">sudo apt-get install -y qemu-kvm libvirt-bin ubuntu-vm-builder bridge-utils virt-manager libosinfo-bin libguestfs-tools virt-top</span><br><span class="line"></span><br><span class="line"><span class="comment">### add your current user to group libvirtd</span></span><br><span class="line">sudo adduser `<span class="built_in">id</span> -un` libvirtd</span><br></pre></td></tr></table></figure>
+<h3 id="test">2. Test</h3>
+<h4 id="launch-a-vm">2.1 Launch a VM</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### create a disk </span></span><br><span class="line">qemu-img create -f qcow2 ubuntu.qcow2 20G</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">### launch a VM named test here</span></span><br><span class="line">sudo virt-install \</span><br><span class="line">--name <span class="built_in">test</span> \</span><br><span class="line">--connect qemu:///system \</span><br><span class="line">--ram 10240 \</span><br><span class="line">--disk path=/path-to-disk/ubuntu.qcow2,format=qcow2,bus=virtio,size=8 \</span><br><span class="line">--vcpus 8 \</span><br><span class="line">--os-type linux \</span><br><span class="line">--network network=default \</span><br><span class="line">--graphics none \</span><br><span class="line">--console pty,target_type=serial \</span><br><span class="line">--location=/path-to-img/ubuntu-14.04.5-server-amd64.iso \</span><br><span class="line">--extra-args <span class="string">&#x27;console=ttyS0,115200n8 serial’</span></span><br></pre></td></tr></table></figure>
+<p>Here, we define a domain named <code>test</code> with 8 vCPUs and 10GB memory. We add a default network interface just for SSH connection.</p>
+<h4 id="insert-a-pci-passthrough-device">2.2 insert a pci-passthrough device</h4>
+<p>To inject a pci-passthrough device, namely VF in this setting, we only need to know the pci address at our host and modify the VM configuration xml file.</p>
+<p>To check VFs' pci addresses, just run <code>ip link show</code> or <code>lshw -c network -businfo</code>. And add this info to <code>sudo virsh edit test</code>.</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="tag">&lt;<span class="name">interface</span> <span class="attr">type</span>=<span class="string">&#x27;hostdev&#x27;</span> <span class="attr">managed</span>=<span class="string">&#x27;yes&#x27;</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">mac</span> <span class="attr">address</span>=<span class="string">&#x27;52:54:00:b1:fa:4f&#x27;</span>/&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">source</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">address</span> <span class="attr">type</span>=<span class="string">&#x27;pci&#x27;</span> <span class="attr">domain</span>=<span class="string">&#x27;0x0000&#x27;</span> <span class="attr">bus</span>=<span class="string">&#x27;0x06&#x27;</span> <span class="attr">slot</span>=<span class="string">&#x27;0x10&#x27;</span> <span class="attr">function</span>=<span class="string">&#x27;0x0&#x27;</span>/&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">source</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">interface</span>&gt;</span></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>When you reluanch your VM, you may use <code>ifconfig -a</code> to check whether you have done correctly.</p>
+<h4 id="small-modifications-to-mtcp">2.3 small modifications to mTCP</h4>
+<p>File <code>/mtcp/src/dpdk_module.c</code>, comment lines related to set TX/RX flow control of the NIC.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* retrieve current flow control settings per port */</span></span><br><span class="line"><span class="built_in">memset</span>(&amp;fc_conf, <span class="number">0</span>, <span class="keyword">sizeof</span>(fc_conf));</span><br><span class="line">ret = rte_eth_dev_flow_ctrl_get(portid, &amp;fc_conf);</span><br><span class="line"><span class="keyword">if</span> (ret != <span class="number">0</span>)</span><br><span class="line">	rte_exit(EXIT_FAILURE, <span class="string">&quot;Failed to get flow control info!\n&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">/* and just disable the rx/tx flow control */</span></span><br><span class="line">fc_conf.mode = RTE_FC_NONE;</span><br><span class="line">ret = rte_eth_dev_flow_ctrl_set(portid, &amp;fc_conf);</span><br><span class="line"><span class="keyword">if</span> (ret != <span class="number">0</span>)</span><br><span class="line">	rte_exit(EXIT_FAILURE, <span class="string">&quot;Failed to set flow control info!: errno: %d\n&quot;</span>, ret);</span><br></pre></td></tr></table></figure>
+<p>And if you rename VF nic name or set IP to it, the MAC may be all-zero. So just modify <code>dpdk-17.08/lib/librte_eal/linuxapp/igb_uio/igb_uio.h</code> to enable <code>ifconfig $if_name hw ether $mac_addr</code>.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="type">static</span> <span class="type">int</span></span><br><span class="line"><span class="title function_">netdev_set_mac</span><span class="params">(<span class="keyword">struct</span> net_device *netdev, <span class="type">void</span> *p)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">sockaddr</span> *<span class="title">addr</span> =</span> p;</span><br><span class="line">	<span class="keyword">if</span> (!is_valid_ether_addr((<span class="type">unsigned</span> <span class="type">char</span> *)(addr-&gt;sa_data)))</span><br><span class="line">		<span class="keyword">return</span> -EADDRNOTAVAIL;</span><br><span class="line">	<span class="built_in">memcpy</span>(netdev-&gt;dev_addr, addr-&gt;sa_data, netdev-&gt;addr_len);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line">...</span><br><span class="line">	.ndo_set_mac_address    = netdev_set_mac,</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<h3 id="miscellaneous">Miscellaneous</h3>
+<p>If you use an image like Ubuntu 16.04 64-bit as the guest OS, you may lost your console when you boot your VM. This is because that <code>grub</code> file may not add the required setting by default. To solve this problem, just modify the <code>grub</code> and <code>bootentry</code> and then reboot.</p>
+<p>Specifically,</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo guestmount -d <span class="built_in">test</span> -i /mnt</span><br><span class="line">sudo vim /mnt/etc/default/grub</span><br></pre></td></tr></table></figure>
+<p>modify related fields (NOTE: you can set your own baud rate):</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">GRUB_CMDLINE_LINUX=<span class="string">&#x27;console=tty0 console=ttyS0,115200n8&#x27;</span></span><br><span class="line">GRUB_TERMINAL=serial</span><br><span class="line">GRUB_SERIAL_COMMAND=<span class="string">&quot;serial --speed=115200 --unit=0 --word=8 --parity=no --stop=1”</span></span><br></pre></td></tr></table></figure>
+<p>and update the boot entry:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /mnt/boot/grub/grub.cfg</span><br><span class="line"><span class="comment">### add additional parameters</span></span><br><span class="line">console=ttyS0,19200 earlyprint=serial,ttyS0,19200 </span><br></pre></td></tr></table></figure>
+<h3 id="references">References</h3>
+<p><a target="_blank" rel="noopener" href="https://wiki.libvirt.org/page/Networking#PCI_Passthrough_of_host_network_devices">about how to add a pci passthrough host network device</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/KVM/" rel="tag"><i class="fa fa-tag"></i> KVM</a>
+              <a href="/tags/VF/" rel="tag"><i class="fa fa-tag"></i> VF</a>
+              <a href="/tags/mTCP/" rel="tag"><i class="fa fa-tag"></i> mTCP</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+            </div>
+            <div class="post-nav-item">
+                <a href="/2019/04/11/Tour-Around-Kernel-Stack/" rel="next" title="Tour Around Kernel Stack">
+                  Tour Around Kernel Stack <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  <div class="comments" id="disqus_thread">
+    <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+  </div>
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa-solid fa-code"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tao Wang</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div><script color="0,0,0" opacity="0.5" zIndex="-1" count="230" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  <script src="/js/third-party/pace.js"></script>
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"ams","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.1/es5/tex-mml-chtml.js","integrity":"sha256-hlC2uSQYTmPsrzGZTEQEg9PZ1a/+SV6VBCTclohf2og="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+<script class="next-config" data-name="disqus" type="application/json">{"enable":true,"shortname":"wtaos-homepage","count":true,"i18n":{"disqus":"disqus"}}</script>
+<script src="/js/third-party/comments/disqus.js"></script>
+
+</body>
+</html>
